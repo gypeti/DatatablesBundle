@@ -1,0 +1,14 @@
+{% extends 'SgDatatablesBundle:Column:column.html.twig' %}
+
+{% block data %}
+    "data": "{{ column.data }}",
+    "render": function(data, type, row, meta) {
+        switch(data) {
+        {% for k,v in column.map %}
+            case "{{k}}":
+                return "{{v|trans}}";
+        {% endfor %}
+        }
+        return "";
+    },
+{% endblock %}

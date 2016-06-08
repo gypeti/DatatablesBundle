@@ -1,0 +1,12 @@
+{% extends 'SgDatatablesBundle:Column:column.html.twig' %}
+
+{% block data %}
+    "data": "{{ column.data }}",
+    "render": function(data, type, row, meta) {
+        var text = ''
+            + row.{{ column.country }}
+            + ' '
+            + row.{{ column.city }};
+        return text;
+    },
+{% endblock %}

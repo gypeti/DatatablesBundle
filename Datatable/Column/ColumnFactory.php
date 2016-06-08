@@ -71,6 +71,18 @@ class ColumnFactory
             case 'progress_bar':
                 $column = new ProgressBarColumn();
                 break;
+            case 'titlewithdate':
+                $column = new TitleWithDateColumn();
+                break;
+            case 'crmclosed':
+                $column = new CRMClosedColumn();
+                break;
+            case 'enum':
+                $column = new EnumColumn();
+                break;
+            case 'address':
+                $column = new AddressColumn();
+                break;
             default:
                 throw new InvalidArgumentException('createColumnByName(): The column is not supported.');
         }

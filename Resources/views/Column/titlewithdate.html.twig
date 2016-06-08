@@ -1,0 +1,12 @@
+{% extends 'SgDatatablesBundle:Column:column.html.twig' %}
+
+{% block data %}
+    "data": "{{ column.data }}",
+    "render": function(data, type, row, meta) {
+        var text = row.{{ column.main }} 
+            + '<div class="datatable-date">'
+            + render_datetime(row.{{ column.date }}, type, row, meta, '{{ column.dateFormat }}')
+            + '</div>';
+        return text;
+    },
+{% endblock %}

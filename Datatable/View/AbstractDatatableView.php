@@ -12,6 +12,7 @@
 namespace Sg\DatatablesBundle\Datatable\View;
 
 use Sg\DatatablesBundle\Datatable\Column\ColumnBuilder;
+use Sg\DatatablesBundle\Datatable\View\MyOptions as Options;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
