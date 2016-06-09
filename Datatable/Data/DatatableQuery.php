@@ -305,6 +305,7 @@ class DatatableQuery
 
                     $currentPart = array_shift($parts);
                     $currentAlias = ($previousPart == $this->tableName ? '' : $previousPart.'_') . $currentPart; // This condition keeps stable queries callbacks
+                    $currentAlias.= "_alias";
 
                     if (!array_key_exists($previousAlias.'.'.$currentPart, $this->joins)) {
                         $this->joins[$previousAlias.'.'.$currentPart] = $currentAlias;
