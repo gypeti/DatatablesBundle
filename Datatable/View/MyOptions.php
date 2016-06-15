@@ -19,6 +19,12 @@ class MyOptions extends Options
     protected $rowId;
 
     /**
+     *
+     * @var int
+     */
+    protected $startId;
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
@@ -26,10 +32,12 @@ class MyOptions extends Options
         $resolver->setDefaults(array(
             'details' => false,
             'rowId' => "",
+            'startId' => 0,
         ));
 
         $resolver->setAllowedTypes('details', 'bool');
         $resolver->setAllowedTypes('rowId', 'string');
+        $resolver->setAllowedTypes('startId', 'int');
 
         return parent::configureOptions($resolver);
     }
@@ -78,6 +86,30 @@ class MyOptions extends Options
     protected function setRowId($rowId)
     {
         $this->rowId = (string) $rowId;
+
+        return $this;
+    }
+
+    /**
+     * Get StartId.
+     *
+     * @return int
+     */
+    public function getStartId()
+    {
+        return (int) $this->startId;
+    }
+
+    /**
+     * Set StartId.
+     *
+     * @param int $rowId
+     *
+     * @return $this
+     */
+    protected function setStartId($startId)
+    {
+        $this->startId = (int) $startId;
 
         return $this;
     }
