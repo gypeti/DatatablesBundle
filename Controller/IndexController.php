@@ -31,7 +31,7 @@ class IndexController extends Controller
     public function indexResultsAction(Request $request, $datatable_name)
     {
         /* @var $datatable AbstractDatatableView */
-        $datatable = $this->get('app.datatable.' . $datatable);
+        $datatable = $this->get('app.datatable.' . $datatable_name);
         $datatable->buildDatatable();
 
         /* @var $query DatatableQuery */
