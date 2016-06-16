@@ -11,7 +11,6 @@ use Sg\DatatablesBundle\Datatable\View\AbstractDatatableView;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class EditableController
@@ -26,7 +25,7 @@ class IndexController extends Controller
      * @param string $datatable_name
      *
      * @Route("/list/results/{datatable_name}", name="sg_datatables_list_results")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      */
     public function indexResultsAction(Request $request, $datatable_name)
     {
@@ -46,7 +45,9 @@ class IndexController extends Controller
      * @param Request $request
      * @param string $datatable_name
      * @param int $id
+     *
      * @Route("/list/get_page_number/{datatable_name}/{id}", name="sg_datatables_get_page_number", options={"expose"=true})
+     * @Method({"GET", "POST"})
      */
     public function getPageNumberAction(Request $request, $datatable_name, $id)
     {

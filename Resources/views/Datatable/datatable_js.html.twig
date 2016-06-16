@@ -72,15 +72,22 @@
                         var $dt = $(this).DataTable();
                         var params = $dt.ajax.params();
                         var name = $(this).attr('id').replace(/_datatable$/, '');
-                        var url = Routing.generate('sg_datatables_get_page_number', {'datatable_name': name, 'id': {{ view_options.startId }} });
-                        $.get(url, params, function(data) {
-                            var pageNum = Math.floor(data.position / $dt.page.len());
-                            $dt.one('draw.dt', function() {
-                                var $row = $('#' + data.id);
-                                $row.click();
-                                scrollToElement($row);
-                            });
-                            $dt.page(pageNum).draw(false);
+                        var url = Routing.generate('sg_datatables_get_page_number', {'datatable_name': name, 'id': defaults.startId });
+                        $.ajax({
+                            url: url,
+                            method: defaults.ajax.type,
+                            data: params,
+                            success: function(data) {
+                                if (data.position !== null) {
+                                    var pageNum = Math.floor(data.position / $dt.page.len());
+                                    $dt.one('draw.dt', function() {
+                                        var $row = $('#' + data.id);
+                                        $row.click();
+                                        scrollToElement($row);
+                                    });
+                                    $dt.page(pageNum).draw(false);
+                                }
+                            }
                         });
                     })
                 {% endif %}
