@@ -119,6 +119,13 @@ abstract class AbstractColumn implements ColumnInterface, OptionsInterface
     protected $visible;
 
     /**
+     * Enable or disable the toggle of this column.
+     *
+     * @var boolean
+     */
+    protected $toggleable;
+
+    /**
      * Column width assignment.
      *
      * @var string
@@ -205,6 +212,8 @@ abstract class AbstractColumn implements ColumnInterface, OptionsInterface
     {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
+        $resolver->setDefault('toggleable', true);
+        $resolver->setAllowedTypes('toggleable', 'bool');
 
         $this->options = $resolver->resolve($options);
 
@@ -469,6 +478,30 @@ abstract class AbstractColumn implements ColumnInterface, OptionsInterface
     public function getVisible()
     {
         return $this->visible;
+    }
+
+    /**
+     * Set toggleable.
+     *
+     * @param boolean $toggleable
+     *
+     * @return $this
+     */
+    public function setToggleable($toggleable)
+    {
+        $this->toggleable = (boolean) $toggleable;
+
+        return $this;
+    }
+
+    /**
+     * Get toggleable.
+     *
+     * @return boolean
+     */
+    public function getToggleable()
+    {
+        return $this->toggleable;
     }
 
     /**

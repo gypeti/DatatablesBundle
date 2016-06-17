@@ -28,8 +28,13 @@
 </div>
 {% endif %}
 
-<table cellpadding="0" cellspacing="0" class="{{ view_options.class }}" border="0" id="{{ view_table_id }}" width="100%">
+<table cellpadding="0" cellspacing="0" class="{{ view_options.class }} datatable-custom" border="0" id="{{ view_table_id }}" width="100%">
     <thead>
+        <tr>
+        {% for column in view_columns %}
+        <th class="{{not column.toggleable?'nonToggleable '}}{{column.class}}"></th>
+        {% endfor %}
+        </tr>
     </thead>
     {% if view_options.individualFiltering or view_multiselect %}
         <tfoot>
