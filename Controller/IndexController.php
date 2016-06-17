@@ -77,7 +77,7 @@ class IndexController extends Controller
 
         $newSql = "SELECT $alias.id, @rownum := @rownum + 1 AS position $afterSelect";
         $outerSql = "SELECT * FROM ($newSql) innerSelect WHERE innerSelect.id = ?;";
-        $connection = $this->getDoctrine()->getEntityManager()->getConnection();
+        $connection = $this->getDoctrine()->getManager()->getConnection();
         $connection->exec('SET @rownum := -1;');
         try {
             $result = $connection->executeQuery($outerSql, [$id])->fetch();
