@@ -78,7 +78,7 @@
                             method: defaults.ajax.type,
                             data: params,
                             success: function(data) {
-                                if (data.position !== null) {
+                                if (data.position !== undefined && data.position !== null) {
                                     var pageNum = Math.floor(data.position / $dt.page.len());
                                     $dt.one('draw.dt', function() {
                                         var $row = $('#' + data.id);

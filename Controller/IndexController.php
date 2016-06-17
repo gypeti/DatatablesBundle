@@ -51,6 +51,10 @@ class IndexController extends Controller
      */
     public function getPageNumberAction(Request $request, $datatable_name, $id)
     {
+        $connection = $this->getDoctrine()->getManager()->getConnection();
+        if ($connection->getDatabasePlatform()->getName() !== 'mysql') {
+            throw new \Exception('getPageNumberAction() is only implemented for MySQL DBMS');
+        }
         /* @var $datatable AbstractDatatableView */
         $datatable = $this->get('app.datatable.' . $datatable_name);
         $datatable->buildDatatable();
@@ -77,7 +81,6 @@ class IndexController extends Controller
 
         $newSql = "SELECT $alias.id, @rownum := @rownum + 1 AS position $afterSelect";
         $outerSql = "SELECT * FROM ($newSql) innerSelect WHERE innerSelect.id = ?;";
-        $connection = $this->getDoctrine()->getManager()->getConnection();
         $connection->exec('SET @rownum := -1;');
         try {
             $result = $connection->executeQuery($outerSql, [$id])->fetch();
