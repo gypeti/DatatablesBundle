@@ -2,7 +2,24 @@
     "serverSide": true,
     "ajax": {
         "url": "{{ view_ajax.url|raw }}",
-        "type": "{{ view_ajax.type }}"
+        "type": "{{ view_ajax.type }}",
+        "data": function(params, dt) {
+          if (dt._colReorder) {
+            var api = new $.fn.dataTable.Api( dt );
+            var nparams = $.extend(true, {}, params);
+            for (var k in params.columns) {
+              var idx = api.colReorder.transpose(parseInt(k));
+              nparams.columns[k] = params.columns[idx];
+            }
+            for (var k in params.order) {
+              var idx = api.colReorder.transpose(params.order[k].column, 'toOriginal');
+              nparams.order[k].column = idx;
+            }
+            return nparams;
+          } else {
+            return params;
+          }
+        }
     },
 {% else %}
     "serverSide": false,
