@@ -1,9 +1,13 @@
+
+{% if true == view_actions.isAddIfClosure %}
 {% set topactions %}
 {% for action in view_actions.actions %}
     {% include 'SgDatatablesBundle:Action:top_actions.html.twig' %}
 {% endfor %}
 {% endset %}
-
+{% else %}
+    {% set topactions = '' %}
+{% endif %}
 
 {% if view_options.details %}
 <div class="container-fluid">

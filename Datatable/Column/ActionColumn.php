@@ -76,6 +76,21 @@ class ActionColumn extends AbstractColumn
     /**
      * {@inheritdoc}
      */
+    public function addDataToOutputArray(&$row)
+    {
+        $actionRowItems = array();
+
+        /** @var Action $action */
+        foreach ($this->actions as $action) {
+            $actionRowItems[$action->getRoute()] = $action->isRenderIfClosure($row);
+        }
+
+        $row['sg_datatables_actions'][$this->getIndex()] = $actionRowItems;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getAlias()
     {
         return 'action';
@@ -101,7 +116,8 @@ class ActionColumn extends AbstractColumn
             'visible' => true,
             'width' => '',
             'start_html' => '',
-            'end_html' => ''
+            'end_html' => '',
+            'add_if' => null
         ));
 
         $resolver->setAllowedTypes('class', 'string');
@@ -113,6 +129,7 @@ class ActionColumn extends AbstractColumn
         $resolver->setAllowedTypes('width', 'string');
         $resolver->setAllowedTypes('start_html', 'string');
         $resolver->setAllowedTypes('end_html', 'string');
+        $resolver->setAllowedTypes('add_if', array('Closure', 'null'));
         $resolver->setAllowedTypes('actions', 'array');
 
         return $this;
@@ -195,22 +212,5 @@ class ActionColumn extends AbstractColumn
     public function getActions()
     {
         return $this->actions;
-    }
-
-    /**
-     * Check visibility.
-     *
-     * @param array $entity
-     */
-    public function checkVisibility(array &$entity)
-    {
-        $actionState = array();
-
-        /** @var Action $action */
-        foreach ($this->actions as $action) {
-            $actionState[$action->getRoute()] = $action->isVisible($entity);
-        }
-
-        $entity['actions'] = $actionState;
     }
 }

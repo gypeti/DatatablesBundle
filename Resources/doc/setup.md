@@ -22,7 +22,9 @@
                     'route' => $this->router->generate('post_new'),
                     'label' => $this->translator->trans('datatables.actions.new'),
                     'icon' => 'glyphicon glyphicon-plus',
-                    //'role' => 'ROLE_USER',
+                    'render_if' => function() {
+                        return ($this->authorizationChecker->isGranted('ROLE_ADMIN'));
+                    },
                     'attributes' => array(
                         'rel' => 'tooltip',
                         'title' => $this->translator->trans('datatables.actions.new'),
@@ -72,25 +74,27 @@
 
 ## 2. Top actions
 
-### Top actions Options
+### Options
 
-| Top action | Type   | Default |          |
-|------------|--------|---------|----------|
-| start_html | string | ''      |          |
-| end_html   | string | ''      |          |
-| actions    | array  |         | required |
+| Top action | Type    | Default |          |
+|------------|---------|---------|----------|
+| start_html | string  | ''      |          |
+| end_html   | string  | ''      |          |
+| add_if     | Closure | null    |          |
+| actions    | array   |         | required |
 
 ### Action options
 
 | Option           | Type        | Default                      |          |
 |------------------|-------------|------------------------------|----------|
 | route            | string      |                              | required |
+| route_parameters | array       | array()                      |          |
 | icon             | string      | ''                           |          |
 | label            | string      | ''                           |          |
 | confirm          | boolean     | false                        |          |
 | confirm_message  | string      | 'datatables.bulk.confirmMsg' |          |
 | attributes       | array       | array()                      |          |
-| role             | string      | ''                           |          |
+| render_if        | Closure     | null                         |          |
 
 ## 3. Callbacks
 
@@ -211,23 +215,24 @@ function order() {
 
 ## 5. Features
 
-| Feature       | Type   | Default |
-|---------------|--------|---------|
-| auto_width    | bool   | true    |
-| defer_render  | bool   | false   |
-| info          | bool   | true    |
-| jquery_ui     | bool   | false   |
-| length_change | bool   | true    |
-| ordering      | bool   | true    |
-| paging        | bool   | true    |
-| processing    | bool   | true    |
-| scroll_x      | bool   | false   |
-| scroll_y      | string | ''      |
-| searching     | bool   | true    |
-| server_side   | bool   | true    |
-| state_save    | bool   | false   |
-| delay         | int    | 0       |
-| extensions    | array  | array() |
+| Feature         | Type   | Default | need 3rd party plugin                                           |
+|-----------------|--------|---------|-----------------------------------------------------------------|
+| auto_width      | bool   | true    |                                                                 |
+| defer_render    | bool   | false   |                                                                 |
+| info            | bool   | true    |                                                                 |
+| jquery_ui       | bool   | false   |                                                                 |
+| length_change   | bool   | true    |                                                                 |
+| ordering        | bool   | true    |                                                                 |
+| paging          | bool   | true    |                                                                 |
+| processing      | bool   | true    |                                                                 |
+| scroll_x        | bool   | false   |                                                                 |
+| scroll_y        | string | ''      |                                                                 |
+| searching       | bool   | true    |                                                                 |
+| state_save      | bool   | false   |                                                                 |
+| delay           | int    | 0       |                                                                 |
+| extensions      | array  | array() |                                                                 |
+| highlight       | bool   | false   | [jQuery Highlight Plugin](https://github.com/bartaz/sandbox.js) |
+| highlight_color | string | 'red'   |                                                                 |
 
 ## 6. Options
 
@@ -255,10 +260,11 @@ function order() {
 
 ## 7. Ajax
 
-| Option | Type   | Default |
-|------  |--------|---------|
-| url    | string | ''      |
-| type   | string | 'GET'   |
+| Option   | Type   | Default |          |
+|------    |--------|---------|----------|
+| url      | string |         | required |
+| type     | string | 'GET'   |          |
+| pipeline | int    | 0       |          |
 
 ## 8. Name
 Since the datatable class should extend the ``AbstractDatatableView`` and this one implements ``DatatableViewInterface``, a ``getName`` method is required. The returned value **must only include letters, numbers, underscores or dashes** as it will be a seed for the id of the generated container of the datatable.

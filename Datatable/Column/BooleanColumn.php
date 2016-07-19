@@ -49,20 +49,6 @@ class BooleanColumn extends AbstractColumn
      */
     protected $falseLabel;
 
-    /**
-     * Editable flag.
-     *
-     * @var boolean
-     */
-    protected $editable;
-
-    /**
-     * Role based editing permission.
-     *
-     * @var null|string
-     */
-    protected $editableRole;
-
     //-------------------------------------------------
     // ColumnInterface
     //-------------------------------------------------
@@ -121,12 +107,13 @@ class BooleanColumn extends AbstractColumn
                 'search_type' => 'eq',
                 'select_options' => array('' => 'Any', '1' => 'Yes', '0' => 'No')
             )),
+            'add_if' => null,
             'true_icon' => '',
             'false_icon' => '',
             'true_label' => '',
             'false_label' => '',
             'editable' => false,
-            'editable_role' => null
+            'editable_if' => null
         ));
 
         $resolver->setAllowedTypes('class', 'string');
@@ -140,12 +127,13 @@ class BooleanColumn extends AbstractColumn
         $resolver->setAllowedTypes('visible', 'bool');
         $resolver->setAllowedTypes('width', 'string');
         $resolver->setAllowedTypes('filter', 'array');
+        $resolver->setAllowedTypes('add_if', array('Closure', 'null'));
         $resolver->setAllowedTypes('true_icon', 'string');
         $resolver->setAllowedTypes('false_icon', 'string');
         $resolver->setAllowedTypes('true_label', 'string');
         $resolver->setAllowedTypes('false_label', 'string');
         $resolver->setAllowedTypes('editable', 'bool');
-        $resolver->setAllowedTypes('editable_role', array('string', 'null'));
+        $resolver->setAllowedTypes('editable_if', array('string', 'null'));
 
         return $this;
     }
@@ -248,53 +236,5 @@ class BooleanColumn extends AbstractColumn
     public function getTrueLabel()
     {
         return $this->trueLabel;
-    }
-
-    /**
-     * Set editable.
-     *
-     * @param boolean $editable
-     *
-     * @return $this
-     */
-    public function setEditable($editable)
-    {
-        $this->editable = $editable;
-
-        return $this;
-    }
-
-    /**
-     * Get editable.
-     *
-     * @return boolean
-     */
-    public function getEditable()
-    {
-        return $this->editable;
-    }
-
-    /**
-     * Set editable role.
-     *
-     * @param null|string $editableRole
-     *
-     * @return $this
-     */
-    public function setEditableRole($editableRole)
-    {
-        $this->editableRole = $editableRole;
-
-        return $this;
-    }
-
-    /**
-     * Get editable role.
-     *
-     * @return null|string
-     */
-    public function getEditableRole()
-    {
-        return $this->editableRole;
     }
 }

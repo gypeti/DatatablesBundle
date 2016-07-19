@@ -28,20 +28,6 @@ class Column extends AbstractColumn
      */
     protected $default;
 
-    /**
-     * Editable flag.
-     *
-     * @var boolean
-     */
-    protected $editable;
-
-    /**
-     * Role based editing permission.
-     *
-     * @var null|string
-     */
-    protected $editableRole;
-
     //-------------------------------------------------
     // ColumnInterface
     //-------------------------------------------------
@@ -66,6 +52,14 @@ class Column extends AbstractColumn
     public function getTemplate()
     {
         return 'SgDatatablesBundle:Column:column.html.twig';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addDataToOutputArray(&$row)
+    {
+        $row['sg_datatables_editable'][$this->getIndex()] = $this->isEditableIfClosure($row);
     }
 
     /**
@@ -97,9 +91,10 @@ class Column extends AbstractColumn
             'visible' => true,
             'width' => '',
             'filter' => array('text', array()),
+            'add_if' => null,
             'default' => '',
             'editable' => false,
-            'editable_role' => null
+            'editable_if' => null,
         ));
 
         $resolver->setAllowedTypes('class', 'string');
@@ -113,9 +108,10 @@ class Column extends AbstractColumn
         $resolver->setAllowedTypes('visible', 'bool');
         $resolver->setAllowedTypes('width', 'string');
         $resolver->setAllowedTypes('filter', 'array');
+        $resolver->setAllowedTypes('add_if', array('Closure', 'null'));
         $resolver->setAllowedTypes('default', 'string');
         $resolver->setAllowedTypes('editable', 'bool');
-        $resolver->setAllowedTypes('editable_role', array('string', 'null'));
+        $resolver->setAllowedTypes('editable_if', array('Closure', 'null'));
 
         return $this;
     }
@@ -146,53 +142,5 @@ class Column extends AbstractColumn
         $this->default = $default;
 
         return $this;
-    }
-
-    /**
-     * Set editable.
-     *
-     * @param boolean $editable
-     *
-     * @return $this
-     */
-    public function setEditable($editable)
-    {
-        $this->editable = $editable;
-
-        return $this;
-    }
-
-    /**
-     * Get editable.
-     *
-     * @return boolean
-     */
-    public function getEditable()
-    {
-        return $this->editable;
-    }
-
-    /**
-     * Set editable role.
-     *
-     * @param null|string $editableRole
-     *
-     * @return $this
-     */
-    public function setEditableRole($editableRole)
-    {
-        $this->editableRole = $editableRole;
-
-        return $this;
-    }
-
-    /**
-     * Get editable role.
-     *
-     * @return null|string
-     */
-    public function getEditableRole()
-    {
-        return $this->editableRole;
     }
 }

@@ -8,6 +8,130 @@
 
 [![Latest Stable Version](https://poser.pugx.org/sg/datatablesbundle/v/stable)](https://packagist.org/packages/sg/datatablesbundle) [![Total Downloads](https://poser.pugx.org/sg/datatablesbundle/downloads)](https://packagist.org/packages/sg/datatablesbundle) [![Latest Unstable Version](https://poser.pugx.org/sg/datatablesbundle/v/unstable)](https://packagist.org/packages/sg/datatablesbundle) [![License](https://poser.pugx.org/sg/datatablesbundle/license)](https://packagist.org/packages/sg/datatablesbundle)
 
+## Recent Changes
+
+### In-place editing callback (#372)
+
+```
+$this->columnBuilder
+    ->add('name', 'column', array(
+        'title' => 'Name',
+        'editable' => true,
+        'editable_if' => function($row) {
+            return (
+                $this->authorizationChecker->isGranted('ROLE_USER') &&
+                $row['public'] == true
+            );
+        }
+    ))
+```
+
+### Pipelining to reduce Ajax calls
+
+```
+$this->ajax->set(array(
+    'url' => $this->router->generate('chili_private_results'),
+    'pipeline' => 6
+));
+```
+
+### Search result highlighting.
+
+1. Include the [jQuery Highlight Plugin](http://bartaz.github.io/sandbox.js/jquery.highlight.html)
+2. Configure your Datatables-Class features
+
+```
+$this->features->set(array(
+    // ...
+    'highlight' => true,
+    'highlight_color' => 'red' // 'red' is the default value
+));
+```
+
+### Enlargement of thumbnails with Featherlight
+
+see [#401](https://github.com/stwe/DatatablesBundle/issues/401)
+
+The Bootstrap modal window does not work properly in responsive mode.
+ 
+Load [Featherlight](https://github.com/noelboss/featherlight/) with your base layout.  
+
+### `add_if` Closure for all Columns and TopActions
+
+```
+$this->columnBuilder
+    ->add('title', 'column', array(
+        // ...
+        'add_if' => function() {
+            return ($this->authorizationChecker->isGranted('ROLE_ADMIN'));
+        },
+    ))
+;
+```
+
+```
+$this->topActions->set(array(
+    // ...
+    'add_if' => function() {
+        return ($this->authorizationChecker->isGranted('ROLE_ADMIN'));
+    },
+    'actions' => array(
+        // ...
+    )
+));
+```
+
+### Render Actions
+
+**before**
+
+```
+'actions' => array(
+    array(
+        'route' => 'post_edit',
+        'route_parameters' => array(
+            'id' => 'id'
+        ),
+        'role' => 'ROLE_ADMIN',
+        'render_if' => function($row) {
+            return ($row['title'] === 'Title 1');
+        },
+    ),
+    // ...
+```
+
+**after**
+
+```
+'actions' => array(
+    array(
+        'route' => 'post_edit',
+        'route_parameters' => array(
+            'id' => 'id'
+        ),
+        'render_if' => function($row) {
+            return (
+                $this->authorizationChecker->isGranted('ROLE_USER') &&
+                $row['user']['username'] == $this->getUser()->getUsername()
+            );
+        },
+    ),
+    // ...
+```
+
+### Multiselect: render checkboxes only if conditions are True
+
+```
+$this->columnBuilder
+    ->add('title', 'multiselect', array(
+        // ...
+        'render_checkbox_if' => function($row) {
+            return ($row['public'] == true);
+        },
+    ))
+;
+```
+
 ## Screenshots
 
 ### Table with Bootstrap3 integration: 
@@ -54,15 +178,9 @@
 
 Much like every other piece of software `SgDatatablesBundle` is not perfect and far from feature complete.
 
-### Use this Bundle in ServerSide mode
-
-The ClientSide mode is no longer supported by me.
-
-### Other limitations
-
-- This bundle does not support multiple Ids
-- Searching and filtering on a virtual column not yet implemented and disabled by default
-- PostgreSql is currently not fully supported
+- This bundle does not support multiple Ids.
+- Searching and filtering on a virtual column not yet implemented and disabled by default.
+- PostgreSql is currently not fully supported.
 
 ## Reporting an issue or a feature request
 

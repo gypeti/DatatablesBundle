@@ -18,6 +18,7 @@ use Sg\DatatablesBundle\Datatable\Filter\FilterInterface;
 use Sg\DatatablesBundle\Datatable\Filter\FilterFactory;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Closure;
 
 /**
  * Class AbstractColumn
@@ -65,7 +66,6 @@ abstract class AbstractColumn implements ColumnInterface, OptionsInterface
      * Set default, static, content for a column.
      *
      * @var string
-     * @deprecated
      */
     protected $defaultContent;
 
@@ -140,11 +140,40 @@ abstract class AbstractColumn implements ColumnInterface, OptionsInterface
     protected $filter;
 
     /**
+     * Add column only if parameter / conditions are TRUE
+     *
+     * @var Closure|null
+     */
+    protected $addIf;
+
+    /**
+     * Editable flag.
+     *
+     * @var boolean
+     */
+    protected $editable;
+
+    /**
+     * Editable only if conditions are True.
+     *
+     * @var Closure|null
+     */
+    protected $editableIf;
+
+    /**
      * Name of datatable view.
      *
      * @var string
      */
     protected $tableName;
+
+    /**
+     * Column index.
+     * Saves the position in the columns array.
+     *
+     * @var integer
+     */
+    protected $index;
 
     //-------------------------------------------------
     // Ctor.
@@ -183,9 +212,45 @@ abstract class AbstractColumn implements ColumnInterface, OptionsInterface
     /**
      * {@inheritdoc}
      */
-    public function renderContent(&$item, DatatableQuery $datatableQuery = null)
+    public function addDataToOutputArray(&$row)
     {
         return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function renderContent(&$row, DatatableQuery $datatableQuery = null)
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isAddIfClosure()
+    {
+        if ($this->addIf instanceof Closure) {
+            return call_user_func($this->addIf);
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isEditableIfClosure(array $row = array())
+    {
+        if (true === $this->editable) {
+            if ($this->editableIf instanceof Closure) {
+                return call_user_func($this->editableIf, $row);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -287,8 +352,6 @@ abstract class AbstractColumn implements ColumnInterface, OptionsInterface
     /**
      * Set default content.
      *
-     * @deprecated
-     *
      * @param string $defaultContent
      *
      * @return $this
@@ -302,8 +365,6 @@ abstract class AbstractColumn implements ColumnInterface, OptionsInterface
 
     /**
      * Get default content.
-     *
-     * @deprecated
      *
      * @return string
      */
@@ -558,6 +619,78 @@ abstract class AbstractColumn implements ColumnInterface, OptionsInterface
     }
 
     /**
+     * Set addIf.
+     *
+     * @param Closure|null $addIf
+     *
+     * @return $this
+     */
+    public function setAddIf($addIf)
+    {
+        $this->addIf = $addIf;
+
+        return $this;
+    }
+
+    /**
+     * Get addIf.
+     *
+     * @return Closure|null
+     */
+    public function getAddIf()
+    {
+        return $this->addIf;
+    }
+
+    /**
+     * Set editable.
+     *
+     * @param boolean $editable
+     *
+     * @return $this
+     */
+    public function setEditable($editable)
+    {
+        $this->editable = $editable;
+
+        return $this;
+    }
+
+    /**
+     * Get editable.
+     *
+     * @return boolean
+     */
+    public function getEditable()
+    {
+        return $this->editable;
+    }
+
+    /**
+     * Set editableIf.
+     *
+     * @param Closure|null $editableIf
+     *
+     * @return $this
+     */
+    public function setEditableIf($editableIf)
+    {
+        $this->editableIf = $editableIf;
+
+        return $this;
+    }
+
+    /**
+     * Get editableIf.
+     *
+     * @return Closure|null
+     */
+    public function getEditableIf()
+    {
+        return $this->editableIf;
+    }
+
+    /**
      * Set table name.
      *
      * @param string $tableName
@@ -579,5 +712,29 @@ abstract class AbstractColumn implements ColumnInterface, OptionsInterface
     public function getTableName()
     {
         return $this->tableName;
+    }
+
+    /**
+     * Set index.
+     *
+     * @param integer $index
+     *
+     * @return $this
+     */
+    public function setIndex($index)
+    {
+        $this->index = $index;
+
+        return $this;
+    }
+
+    /**
+     * Get index.
+     *
+     * @return integer
+     */
+    public function getIndex()
+    {
+        return $this->index;
     }
 }
