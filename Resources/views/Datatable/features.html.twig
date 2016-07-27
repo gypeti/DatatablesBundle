@@ -27,10 +27,17 @@
     {% if 'buttons' == extension %}
         "buttons": [
             {% for option in options %}
-                {% if option.action is defined %}
+                {% if option is iterable %}
                 {
-                    "text": "{{ option.text }}",
-                    "action": {{ include(option.action|raw) }}
+                    {% for key,value in option %}
+                        {% if option._templates is defined and key in option._templates %}
+                        "{{key}}": {{ include(value|raw) }},
+                        {% elseif option._functions is defined and key in option._functions %}
+                        "{{key}}": {{ value|raw }},
+                        {% else %}
+                        "{{key}}": {{ value|json_encode|raw }},
+                        {% endif %}
+                    {% endfor %}
                 },
                 {% else %}
                     {{ option|json_encode|raw }},
