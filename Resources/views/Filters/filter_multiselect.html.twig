@@ -5,11 +5,14 @@
  #
  # For the full copyright and license information, please view the LICENSE
  # file that was distributed with this source code.
+ #
+ # @author benedyktbla <https://github.com/benedyktbla>
  #}
 {% extends 'SgDatatablesBundle:Filters:filter.html.twig' %}
 
 {% block html %}
     <select
+        multiple="multiple"
         id="{{ tableId }}-sg-filter-{{ selectorId }}"
         class="individual_filtering{% if column.filter.class %} {{ column.filter.class }}{% endif %}"
         style="{% if column.width %} width:{{ column.width }};{% endif %}"
@@ -29,4 +32,14 @@
     {% if true == column.filter.cancelButton %}
         {{ cancel_button_html }}
     {% endif %}
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+
+    <script>
+        {% if column.filter.searchColumn %}
+            $('#{{ tableId }}-sg-filter-{{ selectorId }}').val($('#{{ tableId }}-sg-filter-{{ selectorId }} option:first-child').val()).trigger('change');
+        {% endif %}
+    </script>
 {% endblock %}
