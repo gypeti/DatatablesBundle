@@ -74,14 +74,17 @@ class IndexController extends Controller
         $limitPos = strpos($sql, 'LIMIT');
 
         $afterSelect = substr($sql, $fromPos, $limitPos - $fromPos);
-        if (!preg_match('~^(\w+) ?(\w*) ?(.*)$~', substr($sql, $fromPos + 5, $wherePos - 5), $matches)) {
+        $fromPart = substr($sql, $fromPos + 5, $wherePos - 5);
+        //dump($fromPart);
+        if (!preg_match('~^(\w+) ?(\w*) ?(.*)$~', $fromPart, $matches)) {
             throw new Exception('No match');
         }
         $alias = $matches[2];
 
-        $newSql = "SELECT $alias.id, @rownum := @rownum + 1 AS position $afterSelect";
-        $outerSql = "SELECT * FROM ($newSql) innerSelect WHERE innerSelect.id = ?;";
-        $connection->exec('SET @rownum := -1;');
+        $connection->exec('SET @rownum := -1');
+        $newSql = "SELECT $alias.id $afterSelect LIMIT 18446744073709551615";
+        $outerSql = "SELECT * FROM (SELECT subQuery1.id AS id, @rownum := @rownum + 1 AS position FROM ($newSql) subQuery1) subQuery2 WHERE subQuery2.id = ?";
+
         try {
             $result = $connection->executeQuery($outerSql, [$id])->fetch();
         } catch(\Doctrine\DBAL\Exception\DriverException $e) {
