@@ -594,6 +594,8 @@ class DatatableQuery
             }
         }
 
+        $this->qb->addOrderBy($this->tableName . '.' . $this->rootEntityIdentifier, 'ASC');
+
         return $this;
     }
 
