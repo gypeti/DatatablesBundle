@@ -186,6 +186,7 @@ abstract class AbstractDatatableView implements DatatableViewInterface
 
         $this->data = null;
         $this->qb = null;
+        $this->responseCallbacks = array();
     }
 
     //-------------------------------------------------
@@ -314,10 +315,10 @@ abstract class AbstractDatatableView implements DatatableViewInterface
 
     /**
      * Truncate text.
-     * 
+     *
      * @param string  $text
      * @param integer $chars
-     * 
+     *
      * @return string
      */
     public function truncate($text, $chars = 25)
