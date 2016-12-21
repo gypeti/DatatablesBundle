@@ -66,6 +66,13 @@ interface DatatableViewInterface
     public function getCallbacks();
 
     /**
+     * Get ResponseCallbacks
+     *
+     * @return array
+     */
+    public function getResponseCallbacks();
+
+    /**
      * Get Events.
      *
      * @return Events

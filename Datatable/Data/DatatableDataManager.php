@@ -143,6 +143,10 @@ class DatatableDataManager
             $this->locale
         );
 
+        foreach ($datatableView->getResponseCallbacks() as $callback) {
+            $query->addResponseCallback($callback);
+        }
+
         return $query;
     }
 }

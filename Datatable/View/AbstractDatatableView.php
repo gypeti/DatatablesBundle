@@ -97,6 +97,14 @@ abstract class AbstractDatatableView implements DatatableViewInterface
     protected $callbacks;
 
     /**
+     * ResponseCallbacks to be added automatically to the DatatableQuery instances created for this
+     * AbstractDatatableView
+     *
+     * @var array
+     */
+    protected $responseCallbacks;
+
+    /**
      * An Events instance.
      *
      * @var Events
@@ -222,6 +230,14 @@ abstract class AbstractDatatableView implements DatatableViewInterface
     public function getCallbacks()
     {
         return $this->callbacks;
+    }
+
+    /**
+     * @return array
+     */
+    public function getResponseCallbacks()
+    {
+        return $this->responseCallbacks;
     }
 
     /**
