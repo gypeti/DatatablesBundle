@@ -147,6 +147,9 @@ abstract class AbstractDatatableView implements DatatableViewInterface
      */
     protected $qb;
 
+
+    private $locale;
+
     //-------------------------------------------------
     // Ctor.
     //-------------------------------------------------
@@ -385,5 +388,13 @@ abstract class AbstractDatatableView implements DatatableViewInterface
         if (1 !== preg_match(self::NAME_REGEX, $this->getName())) {
             throw new Exception('The result of the getName method can only contain letters, numbers, underscore and dashes.');
         }
+    }
+
+    public function getLocale() {
+        return $this->locale;
+    }
+    
+    public function setLocale($locale) {
+        $this->locale = $locale;
     }
 }

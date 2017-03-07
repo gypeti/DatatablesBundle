@@ -1,0 +1,7 @@
+{% extends 'SgDatatablesBundle:Column:column.html.twig' %}
+
+{% block data %}
+    "render": function(data, type, row, meta) {console.log([data, type, row, meta]);
+        return row["{{ column.data|split(".")[0] }}"][0]["{{ column.data|split(".")[1] }}"];
+    },
+{% endblock %}

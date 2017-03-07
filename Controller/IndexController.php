@@ -36,6 +36,16 @@ class IndexController extends Controller
         /* @var $query DatatableQuery */
         $query = $this->get('sg_datatables.query')->getQueryFrom($datatable);
 
+        if ($datatable->getLocale()) {
+            $locale = $datatable->getLocale();
+            $function = function ($qb) use ($locale) {
+                $qb->andWhere("translations_alias.locale = :locale")
+                    ->setParameter('locale', $locale);
+            };
+
+            $query->addWhereAll($function);
+        }
+
         return $query->getResponse();
     }
 

@@ -44,6 +44,9 @@ class ColumnFactory
             case 'array':
                 $column = new ArrayColumn();
                 break;
+            case 'translation':
+                $column = new TranslationColumn();
+                break;
             case 'boolean':
                 $column = new BooleanColumn();
                 break;
