@@ -38,9 +38,12 @@ class IndexController extends Controller
 
         if ($datatable->getLocale()) {
             $locale = $datatable->getLocale();
-            $function = function ($qb) use ($locale) {
-                $qb->andWhere("translations_alias.locale = :locale")
-                    ->setParameter('locale', $locale);
+            $translations = $datatable->getTranslations();
+            $function = function ($qb) use ($locale, $translations) {
+                foreach ($translations as $tr) {
+                    $qb->andWhere($tr.".locale = :locale");
+                }
+                $qb->setParameter('locale', $locale);
             };
 
             $query->addWhereAll($function);

@@ -23,6 +23,10 @@ use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException;
  */
 class TranslationColumn extends Column
 {
+
+    private $translation;
+    private $field;
+
     /**
      * {@inheritdoc}
      */
@@ -34,8 +38,50 @@ class TranslationColumn extends Column
     /**
      * {@inheritdoc}
      */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->remove('editable');
+        $resolver->remove('editable_if');
+
+        $resolver->setRequired(array('translation', 'field'));
+
+        $resolver->setAllowedTypes('translation', 'string');
+        $resolver->setAllowedTypes('field', 'string');
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getAlias()
     {
         return 'translation';
+    }
+
+    public function setTranslation($translation)
+    {
+        $this->translation = $translation;
+
+        return $this;
+    }
+
+    public function getTranslation()
+    {
+        return $this->translation;
+    }
+
+    public function setField($field)
+    {
+        $this->field = $field;
+
+        return $this;
+    }
+
+    public function getField()
+    {
+        return $this->field;
     }
 }

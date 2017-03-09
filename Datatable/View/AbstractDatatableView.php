@@ -149,6 +149,7 @@ abstract class AbstractDatatableView implements DatatableViewInterface
 
 
     private $locale;
+    private $translations;
 
     //-------------------------------------------------
     // Ctor.
@@ -390,11 +391,23 @@ abstract class AbstractDatatableView implements DatatableViewInterface
         }
     }
 
-    public function getLocale() {
+    public function getLocale()
+    {
         return $this->locale;
     }
-    
-    public function setLocale($locale) {
+
+    public function setLocale($locale)
+    {
         $this->locale = $locale;
+    }
+
+    public function addTranslation($tr)
+    {
+        $this->translations[] = $tr;
+    }
+
+    public function getTranslations()
+    {
+        return $this->translations;
     }
 }
