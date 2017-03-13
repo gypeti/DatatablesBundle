@@ -147,9 +147,9 @@ class DatatableDataManager
             $query->addResponseCallback($callback);
         }
         
-        if ($datatable->getLocale()) {
-            $locale = $datatable->getLocale();
-            $translations = $datatable->getTranslations();
+        if ($datatableView->getLocale()) {
+            $locale = $datatableView->getLocale();
+            $translations = $datatableView->getTranslations();
             $function = function ($qb) use ($locale, $translations) {
                 foreach ($translations as $tr) {
                     $qb->andWhere($tr.".locale = :locale");
