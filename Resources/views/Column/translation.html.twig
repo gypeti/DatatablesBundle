@@ -1,7 +1,7 @@
 {% extends 'SgDatatablesBundle:Column:column.html.twig' %}
 
 {% block data %}
-    "render": function(data, type, row, meta) {console.log([data, type, row, meta]);
+    "render": function(data, type, row, meta) {
         return row[{% for f in column.translation|split('.') %}"{{ f }}"][{% endfor %}0]["{{ column.field }}"];
     },
 {% endblock %}
