@@ -146,6 +146,19 @@ class DatatableDataManager
         foreach ($datatableView->getResponseCallbacks() as $callback) {
             $query->addResponseCallback($callback);
         }
+        
+        if ($datatable->getLocale()) {
+            $locale = $datatable->getLocale();
+            $translations = $datatable->getTranslations();
+            $function = function ($qb) use ($locale, $translations) {
+                foreach ($translations as $tr) {
+                    $qb->andWhere($tr.".locale = :locale");
+                }
+                $qb->setParameter('locale', $locale);
+            };
+
+            $query->addWhereAll($function);
+        }
 
         return $query;
     }
