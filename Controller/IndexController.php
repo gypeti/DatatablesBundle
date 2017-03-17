@@ -2,6 +2,7 @@
 
 namespace Sg\DatatablesBundle\Controller;
 
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -67,7 +68,23 @@ class IndexController extends Controller
         $qb->setMaxResults(null)->setFirstResult(0);
 
         $query = $qb->getQuery();
+        /** @var Query $query */
         $sql = $query->getSQL();
+
+        // Sorry for this
+        $onlyLocale = true;
+        $locale = null;
+        foreach ($query->getParameters() as $param) {
+            if ($param->getName() != 'locale') {
+                $onlyLocale = false;
+                break;
+            } else {
+                $locale = $param->getValue();
+            }
+        }
+        if ($onlyLocale) {
+            $sql = str_replace(" ? ", "'$locale'", $sql);
+        }
 
         $fromPos = strpos($sql, 'FROM');
         $wherePos = strpos($sql, 'WHERE');
