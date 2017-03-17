@@ -152,7 +152,7 @@ class DatatableDataManager
             $translations = $datatableView->getTranslations();
             $function = function ($qb) use ($locale, $translations) {
                 foreach ($translations as $tr) {
-                    $qb->andWhere($tr.".locale = :locale");
+                    $qb->andWhere($qb->expr()->orX($tr.".locale = :locale", $tr.".locale is null"));
                 }
                 $qb->setParameter('locale', $locale);
             };
