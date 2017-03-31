@@ -2,6 +2,7 @@
 
 {% block data %}
     "render": function(data, type, row, meta) {
-        return row[{% for f in column.translation|split('.') %}"{{ f }}"][{% endfor %}0]["{{ column.field }}"];
+        var translation = row[{% for f in column.translation|split('.') %}"{{ f }}"][{% endfor %}0];
+        return translation ? translation["{{ column.field }}"] : '';
     },
 {% endblock %}
