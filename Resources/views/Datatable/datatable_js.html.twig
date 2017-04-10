@@ -85,13 +85,15 @@
                             data: params,
                             success: function(data) {
                                 if (data.position !== undefined && data.position !== null) {
-                                    var pageNum = Math.floor(data.position / $dt.page.len());
-                                    $dt.one('draw.dt', function() {
-                                        var $row = $('#' + data.id);
-                                        $row.click();
-                                        scrollToElement($row);
+                                    setTimeout(function() {
+                                        var pageNum = Math.floor(data.position / $dt.page.len());
+                                        $dt.one('draw.dt', function() {
+                                            var $row = $('#' + data.id);
+                                            $row.click();
+                                            scrollToElement($row);
+                                        });
+                                        $dt.page(pageNum).draw(false);
                                     });
-                                    $dt.page(pageNum).draw(false);
                                 }
                             }
                         });
