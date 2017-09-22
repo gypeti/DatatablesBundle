@@ -49,6 +49,8 @@ class DatatableFormatter
         $lineFormatter = $this->datatableQuery->getLineFormatter();
 
         foreach ($paginator as $row) {
+            // 0. escape html
+            self::htmlEscapeArrayRecursively($row); //TODO make this optional for every column
 
             // 1. Call the the lineFormatter to format row items
             if (is_callable($lineFormatter)) {
@@ -63,6 +65,25 @@ class DatatableFormatter
             }
 
             $this->output['data'][] = $row;
+        }
+    }
+
+    //-------------------------------------------------
+    // Helper
+    //-------------------------------------------------
+
+    /**
+     * Runs the built-in HTML escaping function for every string in the multi-dimensional array recursively.
+     * @see htmlspecialchars
+     * @param array $array
+     */
+    public static function htmlEscapeArrayRecursively(array &$array) {
+        foreach ($array as $k => $v) {
+            if (is_string($v)) {
+                $array[$k] = htmlspecialchars($v);
+            } elseif (is_array($v)) {
+                self::htmlEscapeArrayRecursively($array[$k]);
+            }
         }
     }
 
