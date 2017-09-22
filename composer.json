@@ -18,7 +18,8 @@
         "issues": "https://github.com/stwe/DatatablesBundle/issues"
     },
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4",
+        "sensio/framework-extra-bundle": "^3.0.2",
         "symfony/framework-bundle": "~2.6|~3.0",
         "symfony/options-resolver": "~2.6|~3.0",
         "symfony/property-access": "~2.6|~3.0",
