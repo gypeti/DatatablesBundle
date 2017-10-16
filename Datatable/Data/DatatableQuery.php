@@ -13,6 +13,7 @@ namespace Sg\DatatablesBundle\Datatable\Data;
 
 use Sg\DatatablesBundle\Datatable\View\DatatableViewInterface;
 use Sg\DatatablesBundle\Datatable\Column\AbstractColumn;
+use Sg\DatatablesBundle\Datatable\Column\TranslationColumn;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Serializer;
@@ -598,6 +599,28 @@ class DatatableQuery
 
         return $this;
     }
+    
+    /**
+     * Is there a translation column among the orderings
+     * (because if there is, output walkers are necessary)
+     *
+     * @return boolean
+     */
+    private function forceOutputWalkers()
+    {
+        if (isset($this->requestParams['order']) && count($this->requestParams['order'])) {
+            $counter = count($this->requestParams['order']);
+            for ($i = 0; $i < $counter; $i++) {
+                $columnIdx = (integer) $this->requestParams['order'][$i]['column'];
+                $requestColumn = $this->requestParams['columns'][$columnIdx];
+                if ('true' == $requestColumn['orderable'] && $this->columns[$columnIdx] instanceof TranslationColumn) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Paging.
@@ -726,7 +749,7 @@ class DatatableQuery
         false === $buildQuery ? : $this->buildQuery();
 
         $this->paginator = new Paginator($this->execute(), true);
-        $this->paginator->setUseOutputWalkers($outputWalkers);
+        $this->paginator->setUseOutputWalkers($outputWalkers || $this->forceOutputWalkers());
 
         $formatter = new DatatableFormatter($this);
         $formatter->runFormatter();
