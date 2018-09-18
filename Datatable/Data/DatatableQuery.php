@@ -307,7 +307,7 @@ class DatatableQuery
                     // If it's an embedded class, we can query without JOIN
                     if (array_key_exists($parts[0], $metadata->embeddedClasses)) {
                         $this->selectColumns[$currentAlias][] = str_replace('\\', '', $data);
-                        $this->addSearchOrderColumn($key, $currentAlias, $data);
+                        $this->addSearchOrderColumn($key, $currentAlias, str_replace('\\', '', $data));
                         continue;
                     }
                 } else {
