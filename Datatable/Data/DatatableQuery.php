@@ -301,24 +301,21 @@ class DatatableQuery
             $metadata = $this->metadata;
 
             if (true === $this->isSelectColumn($data)) {
-                $parts = explode('\\\\.', $data);
 
-                if (count($parts) > 1) {
-                    // If it's an embedded class, we can query without JOIN
-                    if (array_key_exists($parts[0], $metadata->embeddedClasses)) {
-                        $this->selectColumns[$currentAlias][] = str_replace('\\', '', $data);
-                        $this->addSearchOrderColumn($key, $currentAlias, str_replace('\\', '', $data));
-                        continue;
-                    }
-                } else {
-                    $parts = explode('.', $data);
+                $parts = explode('.', $data);
 
-                    while (count($parts) > 1) {
-                        $previousPart = $currentPart;
-                        $previousAlias = $currentAlias;
-
-                        $currentPart = array_shift($parts);
-                        $currentAlias = ($previousPart == $this->tableName ? '' : $previousPart.'_') . $currentPart; // This condition keeps stable queries callbacks
+                while (count($parts) > 1) {
+                    $previousPart = $currentPart;
+                    $previousAlias = $currentAlias;
+                    $currentPart = array_shift($parts);
+                    if (substr($currentPart, -2) == '\\\\') {
+                        // If it's an embedded class, we can query without JOIN
+                        $currentPart = substr($currentPart, 0, -2);
+                        if (array_key_exists($currentPart, $metadata->embeddedClasses)) {
+                            $parts[0] = $currentPart.'.'.$parts[0];
+                        }
+                    } else {
+                        $currentAlias = ($previousPart == $this->tableName ? '' : $previousPart.'_') . str_replace('.', '_', $currentPart); // This condition keeps stable queries callbacks
                         $currentAlias.= "_alias";
                         if (!array_key_exists($previousAlias.'.'.$currentPart, $this->joins)) {
                             $this->joins[$previousAlias.'.'.$currentPart] = $currentAlias;
@@ -326,11 +323,12 @@ class DatatableQuery
 
                         $metadata = $this->setIdentifierFromAssociation($currentAlias, $currentPart, $metadata);
                     }
-
-                    $this->selectColumns[$currentAlias][] = $this->getIdentifier($metadata);
-                    $this->selectColumns[$currentAlias][] = $parts[0];
-                    $this->addSearchOrderColumn($key, $currentAlias, $parts[0]);
                 }
+
+                $this->selectColumns[$currentAlias][] = $this->getIdentifier($metadata);
+                $this->selectColumns[$currentAlias][] = $parts[0];
+                $this->addSearchOrderColumn($key, $currentAlias, $parts[0]);
+
             } else {
                 $this->orderColumns[] = null;
                 $this->searchColumns[] = null;
